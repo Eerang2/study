@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -25,10 +26,10 @@ public class FrontController {
         webDataBinder.addValidators(signUpFormValidator);
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "/login";
-    }
+//    @GetMapping("/login")
+//    public String login() {
+//        return "/login";
+//    }
 
     @GetMapping("/sign-up")
     public String signUpForm(Model model) {
@@ -48,7 +49,7 @@ public class FrontController {
         return "redirect:/";
     }
 
-    @GetMapping("/login/check-email-token")
+    @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email);
         String view = "/account/checked-email";
@@ -62,8 +63,7 @@ public class FrontController {
             return view;
         }
 
-        account.complateSignUp();
-        accountService.login(account);
+        accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("username", account.getUsername());
         return view;
@@ -86,6 +86,19 @@ public class FrontController {
 
          accountService.sendSignUpConfirmEmail(account);
          return "redirect:/";
+     }
+
+     @GetMapping("/profile/{username}")
+    public String viewProfile(@PathVariable String username, Model model, @CurrentUser Account account) {
+         Account byUsername = accountRepository.findByUsername(username);
+         if (username == null) {
+             throw new IllegalArgumentException(username +" 에 해당하는 사용자가 없습니다.");
+         }
+
+         model.addAttribute(byUsername);
+         model.addAttribute("isOwner", byUsername.equals(account));
+         return "account/profile";
+
      }
 
 

@@ -36,7 +36,7 @@ public class AccountService implements UserDetailsService {
     private final TemplateEngine templateEngine;
     private final EmailService emailService;
 
-    @Transactional
+
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateCheckToken();
@@ -85,6 +85,7 @@ public class AccountService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrUsername) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrUsername);
@@ -95,5 +96,10 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException(emailOrUsername);
         }
         return new UserAccount(account);
+    }
+
+    public void completeSignUp(Account account) {
+        account.complateSignUp();
+        login(account);
     }
 }
