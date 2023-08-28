@@ -31,6 +31,7 @@ public class FrontController {
 //        return "/login";
 //    }
 
+
     @GetMapping("/sign-up")
     public String signUpForm(Model model) {
         model.addAttribute(new SignUpForm());
@@ -46,6 +47,7 @@ public class FrontController {
 
         Account account = accountService.processNewAccount(signUpForm);
         accountService.login(account);
+        //return "redirect:/";
         return "redirect:/";
     }
 
@@ -76,7 +78,7 @@ public class FrontController {
 
      }
 
-     @GetMapping("/resend-confirm-email")
+    @GetMapping("/resend-confirm-email")
     public String resendConfirmEmail(@CurrentUser Account account, Model model) {
          if (!account.canSendConfirmEmail()) {
              model.addAttribute("error", "인증메일은 1시간에 한번씩 보낼 수 있습니다.");

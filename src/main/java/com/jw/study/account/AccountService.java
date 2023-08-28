@@ -5,6 +5,8 @@ import com.jw.study.mail.EmailMessage;
 import com.jw.study.mail.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,7 +36,10 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
-    private final EmailService emailService;
+
+    @Autowired
+    @Qualifier(value = "emailServiceImpl")
+    private EmailService emailService;
 
 
     public Account processNewAccount(SignUpForm signUpForm) {

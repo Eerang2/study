@@ -15,8 +15,29 @@ public class MainController {
         if (account != null) {
             model.addAttribute(account);
         }
-        return "/index";
+        return "index";
     }
+
+//    @GetMapping("/")
+//    public String home(Model model) {
+//        Account mockAccount = Account.builder()
+//                .email("test@test.com")
+//                .username("testName")
+//                .password("testPassword")
+//                .studyCreatedByWeb(true)
+//                .studyEnrollmentResultByEmail(true)
+//                .studyUpdatedByWeb(true)
+//                .emailVerified(true)
+//                .studyCreatedByEmail(false)
+//                .build();
+//
+//        boolean hasNotification = true;
+//
+//        model.addAttribute(mockAccount);
+//        model.addAttribute(hasNotification);
+//
+//        return "index";
+//    }
     @GetMapping("/login")
     public String login() {
         return "login";

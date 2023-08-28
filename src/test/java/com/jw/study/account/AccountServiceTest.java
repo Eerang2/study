@@ -1,0 +1,26 @@
+package com.jw.study.account;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class AccountServiceTest {
+    @Autowired
+    private AccountService accountService;
+
+    @Test
+    void diTest() {
+        Account mockAccount = Account.builder()
+                .email("test@test.com")
+                .username("testName")
+                .password("testPassword")
+                .studyCreatedByWeb(true)
+                .studyEnrollmentResultByEmail(true)
+                .studyUpdatedByWeb(true)
+                .build();
+        accountService.sendSignUpConfirmEmail(mockAccount);
+    }
+}

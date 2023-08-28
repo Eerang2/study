@@ -1,5 +1,8 @@
 package com.jw.study.config;
 
+import com.jw.study.mail.EmailService;
+import com.jw.study.mail.EmailServiceImpl;
+import com.jw.study.mail.EmailServiceMock;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.context.annotation.Bean;
@@ -23,4 +26,9 @@ public class AppConfig {
                 .setSourceNameTokenizer(NameTokenizers.UNDERSCORE);
         return modelMapper;
     }
+
+//    @Bean
+//    public EmailService emailService() {
+//        return new EmailServiceImpl();
+//    }
 }
