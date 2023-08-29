@@ -42,7 +42,7 @@ public class FrontController {
     @PostMapping("/sign-up")
     public String signUPSubmit(@Valid SignUpForm signUpForm, Errors errors) {
         if (errors.hasErrors()) {
-            return "redirect:/";
+            return "account/sign-up";
         }
 
         Account account = accountService.processNewAccount(signUpForm);
@@ -65,6 +65,7 @@ public class FrontController {
             return view;
         }
 
+        account.completeSignUp();
         accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("username", account.getUsername());
@@ -91,7 +92,7 @@ public class FrontController {
      }
 
      @GetMapping("/profile/{username}")
-    public String viewProfile(@PathVariable String username, Model model, @CurrentUser Account account) {
+     public String viewProfile(@PathVariable String username, Model model, @CurrentUser Account account) {
          Account byUsername = accountRepository.findByUsername(username);
          if (username == null) {
              throw new IllegalArgumentException(username +" 에 해당하는 사용자가 없습니다.");
@@ -101,7 +102,7 @@ public class FrontController {
          model.addAttribute("isOwner", byUsername.equals(account));
          return "account/profile";
 
-     }
+    }
 
 
 

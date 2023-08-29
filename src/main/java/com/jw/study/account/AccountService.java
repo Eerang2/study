@@ -44,7 +44,7 @@ public class AccountService implements UserDetailsService {
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateCheckToken();
+        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
@@ -58,8 +58,7 @@ public class AccountService implements UserDetailsService {
                 .studyEnrollmentResultByEmail(true)
                 .studyUpdatedByWeb(true)
                 .build();
-        Account newAccount = accountRepository.save(account);
-        return newAccount;
+        return accountRepository.save(account);
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
@@ -83,7 +82,7 @@ public class AccountService implements UserDetailsService {
 
     public void login(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                new UserAccount(account),
+                account.getUsername(),
                 account.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE USER")));
 
@@ -97,6 +96,7 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             account = accountRepository.findByUsername(emailOrUsername);
         }
+
         if (account == null) {
             throw new UsernameNotFoundException(emailOrUsername);
         }
@@ -104,7 +104,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public void completeSignUp(Account account) {
-        account.complateSignUp();
+        account.completeSignUp();
         login(account);
     }
 }

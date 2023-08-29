@@ -60,11 +60,12 @@ public class Account {
 
     private boolean studyUpdatedByWeb = true;
 
-    public void generateCheckToken() {
+    public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
+        this.emailCheckTokenGeneratedAt = LocalDateTime.now();
     }
 
-    public void complateSignUp() {
+    public void completeSignUp() {
         this.emailVerified = true;
         this.joinedAt = LocalDateTime.now();
     }
