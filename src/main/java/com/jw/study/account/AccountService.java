@@ -58,7 +58,8 @@ public class AccountService implements UserDetailsService {
                 .studyEnrollmentResultByEmail(true)
                 .studyUpdatedByWeb(true)
                 .build();
-        return accountRepository.save(account);
+        Account newAccount = accountRepository.save(account);
+        return newAccount;
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
