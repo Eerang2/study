@@ -3,6 +3,7 @@ package com.jw.study.account;
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
 import com.jw.study.mail.EmailService;
+import com.jw.study.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +108,12 @@ public class AccountService implements UserDetailsService {
     public void completeSignUp(Account account) {
         account.completeSignUp();
         login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setUrl(profile.getUrl());
+        account.setOccupation(profile.getOccupation());
+        account.setLocation(profile.getLocation());
+        account.setBio(profile.getBio());
     }
 }

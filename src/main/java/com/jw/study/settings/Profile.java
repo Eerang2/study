@@ -2,8 +2,10 @@ package com.jw.study.settings;
 
 import com.jw.study.account.Account;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Profile {
 
     private String bio;
