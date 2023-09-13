@@ -100,7 +100,7 @@ public class FrontController {
 
          model.addAttribute(byUsername);
          model.addAttribute("isOwner", byUsername.equals(account));
-         return "account/profile";
+         return "/settings/profile";
 
     }
 
