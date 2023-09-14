@@ -23,6 +23,11 @@ public class SettingsController {
      static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
      static final String SETTINGS_PROFILE_URL = "/settings/profile";
 
+    static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
+    static final String SETTINGS_PROFILE_URL = "/settings/profile";
+
+
+
 
     private final AccountService accountService;
 
@@ -44,6 +49,11 @@ public class SettingsController {
         accountService.updateProfile(account, profile);
         attributes.addFlashAttribute("message", "프로필을 수정했습니다.");
         return "redirect:" + SETTINGS_PROFILE_URL;
+
+    }
+
+    @GetMapping(SETTINGS_PASSWORD_VIEW_NAME)
+    public String passwordUpdateForm(@CurrentUser Account account, Model model) {
 
     }
 
