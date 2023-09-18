@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -20,11 +22,16 @@ import java.util.Stack;
 @RequiredArgsConstructor
 public class SettingsController {
 
+    @InitBinder("PasswordForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new PasswordFirmValidator());
+    }
+
      static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
      static final String SETTINGS_PROFILE_URL = "/settings/profile";
 
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_PASSWORD_URL = "settings/password";
 
 
 
@@ -53,7 +60,23 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_PASSWORD_VIEW_NAME)
-    public String passwordUpdateForm(@CurrentUser Account account, Model model) {
+    public String updatePasswordForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(new PasswordForm());
+        return SETTINGS_PASSWORD_URL;
+    }
+
+    @PostMapping(SETTINGS_PASSWORD_URL)
+    public String updatePassword(@CurrentUser Account account, @Valid PasswordForm passwordForm, Errors errors,
+                                 Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_PASSWORD_VIEW_NAME;
+        }
+        accountService.updatePassword(account, passwordForm.getNewPassword());
+        attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
+        return "redirect:" + SETTINGS_PASSWORD_URL;
+
 
     }
 
