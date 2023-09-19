@@ -3,7 +3,7 @@ package com.jw.study.settings;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-public class PasswordFirmValidator implements Validator {
+public class PasswordFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> aClass) {

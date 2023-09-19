@@ -8,6 +8,6 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(EmailMessage emailMessage) {
         System.out.println("내가진짜 이메일 발송 기능이다.");
-        // TODO : 실제 이메일 발송 로직이 구현되어야
+
     }
 }

@@ -3,6 +3,7 @@ package com.jw.study.account;
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
 import com.jw.study.mail.EmailService;
+import com.jw.study.mail.EmailServiceMock;
 import com.jw.study.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +38,10 @@ public class AccountService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
+    private final EmailServiceMock emailServiceMock;
 
-    @Autowired
-    @Qualifier(value = "emailServiceImpl")
-    private EmailService emailService;
+//    @Qualifier(value = "emailServiceImpl")
+
 
 
     public Account processNewAccount(SignUpForm signUpForm) {
@@ -79,7 +80,7 @@ public class AccountService implements UserDetailsService {
                 .message(message)
                 .build();
 
-        emailService.sendEmail(emailMessage);
+        emailServiceMock.sendEmail(emailMessage);
     }
 
     public void login(Account account) {

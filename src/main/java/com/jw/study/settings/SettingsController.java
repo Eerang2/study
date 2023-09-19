@@ -11,12 +11,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.Stack;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,14 +22,14 @@ public class SettingsController {
 
     @InitBinder("PasswordForm")
     public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new PasswordFirmValidator());
+        webDataBinder.addValidators(new PasswordFormValidator());
     }
 
      static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
      static final String SETTINGS_PROFILE_URL = "/settings/profile";
 
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/settings/password";
 
 
 

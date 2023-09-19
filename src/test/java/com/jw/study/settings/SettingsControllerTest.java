@@ -92,9 +92,9 @@ class SettingsControllerTest {
     @Test
     void updatePasswordForm() throws Exception {
         mockMvc.perform(get(SettingsController.SETTINGS_PASSWORD_URL))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("passwordForm"));
+                        .andExpect(status().isOk())
+                        .andExpect(model().attributeExists("account"))
+                        .andExpect(model().attributeExists("passwordForm"));
 
     }
 
