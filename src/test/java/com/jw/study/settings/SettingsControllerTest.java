@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;
@@ -99,7 +100,7 @@ class SettingsControllerTest {
     }
 
     @WithAccount("jinu")
-    @DisplayName("패스워드 수정하기 -  정상")
+    @DisplayName("패스워드 수정하기 - 입력값 정상")
     @Test
     void updatePassword() throws Exception {
         mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
@@ -112,6 +113,23 @@ class SettingsControllerTest {
 
         Account jinu = accountRepository.findByUsername("jinu");
         assertTrue(passwordEncoder.matches("12345678", jinu.getPassword()));
+    }
+
+
+    @WithAccount("jinu")
+    @DisplayName("패스워드 수정하기 - 입력값 불일치 - 에러")
+    @Test
+    void updatePassword_fail() throws Exception {
+        mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
+                        .param("newPassword", "12345678")
+                        .param("newPasswordConfirm", "11111111")
+                        .with(csrf()))
+                        .andExpect(status().isOk())
+                        .andExpect(view().name(SettingsController.SETTINGS_PASSWORD_VIEW_NAME))
+                        .andExpect(model().hasErrors())
+                        .andExpect(model().attributeExists("passwordForm"))
+                        .andExpect(model().attributeExists("account"));
+
     }
 
 }
