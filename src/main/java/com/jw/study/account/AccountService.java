@@ -2,15 +2,13 @@ package com.jw.study.account;
 
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
-import com.jw.study.mail.EmailService;
 import com.jw.study.mail.EmailServiceMock;
-import com.jw.study.settings.Profile;
+import com.jw.study.settings.form.Notifications;
+import com.jw.study.settings.form.Profile;
+import com.jw.study.settings.form.UsernameForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
-import org.springframework.mail.SimpleMailMessage;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -39,6 +36,7 @@ public class AccountService implements UserDetailsService {
     private final AppProperties appProperties;
     private final TemplateEngine templateEngine;
     private final EmailServiceMock emailServiceMock;
+    private final ModelMapper modelMapper;
 
 //    @Qualifier(value = "emailServiceImpl")
 
@@ -112,16 +110,34 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        account.setUrl(profile.getUrl());
-        account.setOccupation(profile.getOccupation());
-        account.setLocation(profile.getLocation());
-        account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());
+
+        modelMapper.map(profile, account);
         accountRepository.save(account);
+
+
+//        ModelMapper 사용 이후 아래 코드들을 생략할 수 있다.
+
+//        account.setUrl(profile.getUrl());
+//        account.setOccupation(profile.getOccupation());
+//        account.setLocation(profile.getLocation());
+//        account.setBio(profile.getBio());
+//        account.setProfileImage(profile.getProfileImage());
+//        accountRepository.save(account);
     }
 
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        modelMapper.map(notifications, account);
+        accountRepository.save(account);
+    }
+
+    public void updateUsername(Account account, String username) {
+        account.setUsername(username);
+        accountRepository.save(account);
+        login(account);
     }
 }

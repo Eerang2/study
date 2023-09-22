@@ -4,7 +4,14 @@ package com.jw.study.settings;
 import com.jw.study.account.Account;
 import com.jw.study.account.AccountService;
 import com.jw.study.account.CurrentUser;
+import com.jw.study.settings.form.Notifications;
+import com.jw.study.settings.form.PasswordForm;
+import com.jw.study.settings.form.Profile;
+import com.jw.study.settings.form.UsernameForm;
+import com.jw.study.settings.validator.PasswordFormValidator;
+import com.jw.study.settings.validator.UsernameValidator;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -20,26 +27,39 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class SettingsController {
 
-    @InitBinder("PasswordForm")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(new PasswordFormValidator());
-    }
 
      static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
      static final String SETTINGS_PROFILE_URL = "/settings/profile";
-
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
     static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
 
+    static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
+    static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
 
 
 
     private final AccountService accountService;
+    private final ModelMapper modelMapper;
+    private final UsernameValidator usernameValidator;
+
+
+    @InitBinder("PasswordForm")
+    public void passwordFormInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new PasswordFormValidator());
+    }
+
+    @InitBinder("UsernameForm")
+    public void usernameFormInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(usernameValidator);
+    }
+
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new Profile(account));
+        model.addAttribute(modelMapper.map(account, Profile.class));
         return SETTINGS_PROFILE_VIEW_NAME;
     }
 
@@ -74,8 +94,47 @@ public class SettingsController {
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "패스워드를 변경했습니다.");
         return "redirect:" + SETTINGS_PASSWORD_URL;
+    }
 
+    @GetMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotificationsForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, Notifications.class));
+        return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotifications(@CurrentUser Account account, @Valid Notifications notifications, Errors errors,
+                                      Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+        }
+        accountService.updateNotifications(account, notifications);
+        attributes.addFlashAttribute("message", "알림 설정을 변경했습니다.");
+        return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
 
     }
+    @GetMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccountForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, UsernameForm.class));
+        return SETTINGS_ACCOUNT_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccount(@CurrentUser Account account, @Valid UsernameForm usernameForm, Errors errors,
+                                Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_ACCOUNT_VIEW_NAME;
+        }
+        accountService.updateUsername(account, usernameForm.getUsername());
+        attributes.addFlashAttribute("message", "이름을 수정했습니다.");
+        return "redirect:" + SETTINGS_ACCOUNT_URL;
+
+    }
+
+
 
 }

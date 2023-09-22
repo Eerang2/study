@@ -4,6 +4,7 @@ import com.jw.study.WithAccount;
 import com.jw.study.account.Account;
 import com.jw.study.account.AccountRepository;
 import com.jw.study.account.AccountService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-
+@Slf4j
 class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;
@@ -129,7 +130,52 @@ class SettingsControllerTest {
                         .andExpect(model().hasErrors())
                         .andExpect(model().attributeExists("passwordForm"))
                         .andExpect(model().attributeExists("account"));
+    }
+
+    @WithAccount("jinu")
+    @DisplayName("닉네임 수정 폼")
+    @Test
+    void updateAccountForm() throws Exception {
+        mockMvc.perform(get(SettingsController.SETTINGS_ACCOUNT_URL))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("usernameForm"));
 
     }
+
+    @WithAccount("jinu")
+    @DisplayName("패스워드 수정하기 - 입력값 정상")
+    @Test
+    void updateAccount() throws Exception {
+        String newUsername = "gimin";
+        mockMvc.perform(post(SettingsController.SETTINGS_ACCOUNT_URL)
+                        .param("username", newUsername)
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(SettingsController.SETTINGS_ACCOUNT_URL))
+                .andExpect(flash().attributeExists("message"));
+
+        assertNotNull(accountRepository.findByUsername("gimin"));
+    }
+
+    @WithAccount("jinu")
+    @DisplayName("닉네임 수정하기 -  에러")
+    @Test
+    void updateAccount_error() throws Exception {
+        String newUsername = "|-|=[[^8^//";
+        mockMvc.perform(post( SettingsController.SETTINGS_ACCOUNT_URL)
+                        .param("username", newUsername)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTINGS_ACCOUNT_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("usernameForm"));
+
+
+        Account jinu = accountRepository.findByUsername("jinu");
+        assertNull(jinu.getBio());
+    }
+
 
 }

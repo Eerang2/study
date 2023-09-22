@@ -1,4 +1,4 @@
-package com.jw.study.settings;
+package com.jw.study.settings.form;
 
 
 import lombok.Data;
