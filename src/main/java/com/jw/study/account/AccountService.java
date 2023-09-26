@@ -2,6 +2,7 @@ package com.jw.study.account;
 
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
+import com.jw.study.mail.EmailService;
 import com.jw.study.mail.EmailServiceMock;
 import com.jw.study.settings.form.Notifications;
 import com.jw.study.settings.form.Profile;
@@ -139,5 +140,24 @@ public class AccountService implements UserDetailsService {
         account.setUsername(username);
         accountRepository.save(account);
         login(account);
+    }
+
+    public void sendLoginLink(Account account) {
+        Context context = new Context();
+        context.setVariable("link", "login-by-email?token=" + account.getEmailCheckToken() +
+                                                    "&email=" + account.getEmail());
+        context.setVariable("username", account.getUsername());
+        context.setVariable("linkName", "스터디지누 로그인하기");
+        context.setVariable("message", "로그인하려면 아래 링크를 눌러주세요.");
+        context.setVariable("host", appProperties.getHost());
+        String message = templateEngine.process("mail/simple-link", context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("스터디 지누, 로그인 링크")
+                .message(message)
+                .build();
+        emailServiceMock.sendEmail(emailMessage);
+
     }
 }

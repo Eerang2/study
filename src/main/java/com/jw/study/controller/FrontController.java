@@ -128,6 +128,19 @@ public class FrontController {
         return "redirect:/email-login";
     }
 
+    @GetMapping("login-by-email")
+    public String loginByEmail(String token, String email, Model model) {
+        Account account = accountRepository.findByEmail(email);
+        String view = "account/logged-in-by-email";
+        if (account == null || !account.isValidToken(token)) {
+            model.addAttribute("error", "로그인 할 수 없습니다.");
+            return view;
+        }
+        accountService.login(account);
+        return view;
+
+    }
+
 
 
 
