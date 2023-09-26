@@ -1,6 +1,6 @@
 package com.jw.study.account;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;

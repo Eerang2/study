@@ -123,7 +123,7 @@ class SettingsControllerTest {
     void updatePassword_fail() throws Exception {
         mockMvc.perform(post(SettingsController.SETTINGS_PASSWORD_URL)
                         .param("newPassword", "12345678")
-                        .param("newPasswordConfirm", "11111111")
+                        .param("newPasswordConfirm", "87654321")
                         .with(csrf()))
                         .andExpect(status().isOk())
                         .andExpect(view().name(SettingsController.SETTINGS_PASSWORD_VIEW_NAME))
