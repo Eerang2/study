@@ -87,9 +87,9 @@ public class SettingsController {
     @PostMapping(SETTINGS_PASSWORD_URL)
     public String updatePassword(@CurrentUser Account account, @Valid PasswordForm passwordForm, Errors errors,
                                  Model model, RedirectAttributes attributes) {
-//        if (! passwordForm.isEquals()) {
-//            errors.reject("비밀번호 중복");
-//        }
+        if (! passwordForm.isEquals()) {
+            errors.reject("비밀번호 중복");
+        }
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS_PASSWORD_VIEW_NAME;
