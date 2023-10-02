@@ -1,12 +1,10 @@
 package com.jw.study.main;
 
-import com.jw.study.account.Account;
+import com.jw.study.account.domain.Account;
 import com.jw.study.account.CurrentUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.validation.Valid;
 
 
 @Controller

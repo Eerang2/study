@@ -1,6 +1,7 @@
 package com.jw.study.controller;
 
 import com.jw.study.account.*;
+import com.jw.study.account.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

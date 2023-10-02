@@ -1,12 +1,11 @@
 package com.jw.study.account;
 
+import com.jw.study.account.domain.Account;
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
-import com.jw.study.mail.EmailService;
 import com.jw.study.mail.EmailServiceMock;
 import com.jw.study.settings.form.Notifications;
 import com.jw.study.settings.form.Profile;
-import com.jw.study.settings.form.UsernameForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

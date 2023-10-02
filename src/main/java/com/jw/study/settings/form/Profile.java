@@ -1,8 +1,6 @@
 package com.jw.study.settings.form;
 
-import com.jw.study.account.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Data

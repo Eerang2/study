@@ -1,9 +1,7 @@
 package com.jw.study.settings.form;
 
 
-import com.jw.study.account.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class Notifications {

@@ -1,7 +1,7 @@
 package com.jw.study.settings.validator;
 
 
-import com.jw.study.account.Account;
+import com.jw.study.account.domain.Account;
 import com.jw.study.account.AccountRepository;
 import com.jw.study.settings.form.UsernameForm;
 import lombok.RequiredArgsConstructor;

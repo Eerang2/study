@@ -1,7 +1,7 @@
 package com.jw.study.settings;
 
 
-import com.jw.study.account.Account;
+import com.jw.study.account.domain.Account;
 import com.jw.study.account.AccountService;
 import com.jw.study.account.CurrentUser;
 import com.jw.study.settings.form.Notifications;
@@ -29,14 +29,22 @@ public class SettingsController {
 
 
      static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-     static final String SETTINGS_PROFILE_URL = "/settings/profile";
+     static final String SETTINGS_PROFILE_URL ="/" + SETTINGS_PROFILE_VIEW_NAME;
+
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
+
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
-    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
 
     static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
     static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
+
+    static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
+    static final String SETTINGS_TAGS_URL ="/" + SETTINGS_TAGS_VIEW_NAME;
+
+
+
 
 
 
@@ -118,6 +126,11 @@ public class SettingsController {
         return "redirect:" + SETTINGS_NOTIFICATIONS_URL;
 
     }
+    @GetMapping(SETTINGS_TAGS_URL)
+    public String updateTags(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        return SETTINGS_TAGS_VIEW_NAME;
+    }
     @GetMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccountForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
@@ -137,6 +150,7 @@ public class SettingsController {
         return "redirect:" + SETTINGS_ACCOUNT_URL;
 
     }
+
 
 
 
