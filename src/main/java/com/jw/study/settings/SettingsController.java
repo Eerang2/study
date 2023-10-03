@@ -4,12 +4,12 @@ package com.jw.study.settings;
 import com.jw.study.account.domain.Account;
 import com.jw.study.account.AccountService;
 import com.jw.study.account.CurrentUser;
+import com.jw.study.settings.form.NicknameForm;
 import com.jw.study.settings.form.Notifications;
 import com.jw.study.settings.form.PasswordForm;
 import com.jw.study.settings.form.Profile;
-import com.jw.study.settings.form.UsernameForm;
 import com.jw.study.settings.validator.PasswordFormValidator;
-import com.jw.study.settings.validator.UsernameValidator;
+import com.jw.study.settings.validator.NicknameValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,7 @@ public class SettingsController {
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
-    private final UsernameValidator usernameValidator;
+    private final NicknameValidator nicknameValidator;
 
 
     @InitBinder("PasswordForm")
@@ -58,9 +58,9 @@ public class SettingsController {
         webDataBinder.addValidators(new PasswordFormValidator());
     }
 
-    @InitBinder("UsernameForm")
-    public void usernameFormInitBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(usernameValidator);
+    @InitBinder("NicknameForm")
+    public void nicknameFormInitBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(nicknameValidator);
     }
 
 
@@ -134,18 +134,18 @@ public class SettingsController {
     @GetMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccountForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account, UsernameForm.class));
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
         return SETTINGS_ACCOUNT_VIEW_NAME;
     }
 
     @PostMapping(SETTINGS_ACCOUNT_URL)
-    public String updateAccount(@CurrentUser Account account, @Valid UsernameForm usernameForm, Errors errors,
+    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors,
                                 Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS_ACCOUNT_VIEW_NAME;
         }
-        accountService.updateUsername(account, usernameForm.getUsername());
+        accountService.updateNickname(account, nicknameForm.getNickname());
         attributes.addFlashAttribute("message", "이름을 수정했습니다.");
         return "redirect:" + SETTINGS_ACCOUNT_URL;
 

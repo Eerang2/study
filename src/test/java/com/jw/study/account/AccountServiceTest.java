@@ -14,7 +14,7 @@ class AccountServiceTest {
     void diTest() {
         Account mockAccount = Account.builder()
                 .email("test@test.com")
-                .username("testName")
+                .nickname("testName")
                 .password("testPassword")
                 .studyCreatedByWeb(true)
                 .studyEnrollmentResultByEmail(true)

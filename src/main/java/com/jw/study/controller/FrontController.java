@@ -69,7 +69,7 @@ public class FrontController {
         account.completeSignUp();
         accountService.completeSignUp(account);
         model.addAttribute("numberOfUser", accountRepository.count());
-        model.addAttribute("username", account.getUsername());
+        model.addAttribute("nickname", account.getNickname());
         return view;
      }
 
@@ -92,15 +92,15 @@ public class FrontController {
          return "redirect:/";
      }
 
-     @GetMapping("/profile/{username}")
-     public String viewProfile(@PathVariable String username, Model model, @CurrentUser Account account) {
-         Account byUsername = accountRepository.findByUsername(username);
-         if (username == null) {
-             throw new IllegalArgumentException(username +" 에 해당하는 사용자가 없습니다.");
+     @GetMapping("/profile/{nickname}")
+     public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account) {
+         Account byNickname = accountRepository.findByNickname(nickname);
+         if (nickname == null) {
+             throw new IllegalArgumentException(nickname +" 에 해당하는 사용자가 없습니다.");
          }
 
-         model.addAttribute(byUsername);
-         model.addAttribute("isOwner", byUsername.equals(account));
+         model.addAttribute(byNickname);
+         model.addAttribute("isOwner", byNickname.equals(account));
          return "/settings/profile";
 
     }

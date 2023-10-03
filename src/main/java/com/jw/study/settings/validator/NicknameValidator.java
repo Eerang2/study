@@ -3,7 +3,8 @@ package com.jw.study.settings.validator;
 
 import com.jw.study.account.domain.Account;
 import com.jw.study.account.AccountRepository;
-import com.jw.study.settings.form.UsernameForm;
+import com.jw.study.settings.form.NicknameForm;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -11,21 +12,21 @@ import org.springframework.validation.Validator;
 
 @Component
 @RequiredArgsConstructor
-public class UsernameValidator implements Validator {
+public class NicknameValidator implements Validator {
 
     private final AccountRepository accountRepository;
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return UsernameForm.class.isAssignableFrom(aClass);
+        return NicknameForm.class.isAssignableFrom(aClass);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        UsernameForm usernameForm = new UsernameForm();
-        Account byUsername = accountRepository.findByUsername(usernameForm.getUsername());
-        if (byUsername != null) {
-            errors.rejectValue("username", "wrong.value", "입력하신 이름은 사용하실 수 없습니다.");
+        NicknameForm nicknameForm = new NicknameForm();
+        Account byNickname = accountRepository.findByNickname(nicknameForm.getNickname());
+        if (byNickname != null) {
+            errors.rejectValue("nickname", "wrong.value", "입력하신 이름은 사용하실 수 없습니다.");
         }
     }
 }

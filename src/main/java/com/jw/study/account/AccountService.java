@@ -52,7 +52,7 @@ public class AccountService implements UserDetailsService {
     private Account saveNewAccount(SignUpForm signUpForm) {
         Account account = Account.builder()
                 .email(signUpForm.getEmail())
-                .username(signUpForm.getUsername())
+                .nickname(signUpForm.getNickname())
                 .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .studyCreatedByWeb(true)
                 .studyEnrollmentResultByEmail(true)
@@ -66,7 +66,7 @@ public class AccountService implements UserDetailsService {
         Context context = new Context();
         context.setVariable("link", "/check-email-token?token=" + newAccount.getEmailCheckToken() +
                 "&email=" + newAccount.getEmail());
-        context.setVariable("username", newAccount.getUsername());
+        context.setVariable("Nickname", newAccount.getNickname());
         context.setVariable("linkname", "이메일 인증하기");
         context.setVariable("message", "서비스를 이용하시려면 링크를 클릭하세요");
         context.setVariable("host", appProperties.getHost());
@@ -89,21 +89,7 @@ public class AccountService implements UserDetailsService {
 
         SecurityContextHolder.getContext().setAuthentication(token);
     }
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String emailOrUsername) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(emailOrUsername);
-        if (account == null) {
-            account = accountRepository.findByUsername(emailOrUsername);
-        }
-
-        if (account == null) {
-            throw new UsernameNotFoundException(emailOrUsername);
-        }
-        return new UserAccount(account);
-    }
-
+    
     public void completeSignUp(Account account) {
         account.completeSignUp();
         login(account);
@@ -135,8 +121,8 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
     }
 
-    public void updateUsername(Account account, String username) {
-        account.setUsername(username);
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
         accountRepository.save(account);
         login(account);
     }
@@ -145,7 +131,7 @@ public class AccountService implements UserDetailsService {
         Context context = new Context();
         context.setVariable("link", "login-by-email?token=" + account.getEmailCheckToken() +
                                                     "&email=" + account.getEmail());
-        context.setVariable("username", account.getUsername());
+        context.setVariable("nickname", account.getNickname());
         context.setVariable("linkName", "스터디지누 로그인하기");
         context.setVariable("message", "로그인하려면 아래 링크를 눌러주세요.");
         context.setVariable("host", appProperties.getHost());
@@ -158,5 +144,18 @@ public class AccountService implements UserDetailsService {
                 .build();
         emailServiceMock.sendEmail(emailMessage);
 
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
+        Account account = accountRepository.findByEmail(emailOrNickname);
+        if (account == null) {
+            account = accountRepository.findByNickname(emailOrNickname);
+        }
+        if (account == null) {
+            throw new UsernameNotFoundException(emailOrNickname);
+        }
+        return new UserAccount(account);
     }
 }

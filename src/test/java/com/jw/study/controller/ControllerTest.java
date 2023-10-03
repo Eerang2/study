@@ -45,7 +45,7 @@ public class ControllerTest {
     void signUpSubmit_with_wrong_input()throws Exception {
 
         mockMvc.perform(post("/sign-up")
-                        .param("username", "jinu")
+                        .param("nickname", "jinu")
                         .param("email", "email@gmail.com")
                         .param("password", "12345678")
                         .with(csrf()))
@@ -73,7 +73,7 @@ public class ControllerTest {
         Account account = Account.builder()
                 .email("test@email.com")
                 .password("12345678")
-                .username("jinu")
+                .nickname("jinu")
                 .build();
         Account newAcoount = accountRepository.save(account);
         newAcoount.generateEmailCheckToken();
@@ -83,7 +83,7 @@ public class ControllerTest {
                         .param("email", newAcoount.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
-                .andExpect(model().attributeExists("username"))
+                .andExpect(model().attributeExists("nickname"))
                 .andExpect(model().attributeExists("numberOfUser"))
                 .andExpect(view().name("/account/checked-email"))
                 .andExpect(authenticated());
@@ -94,7 +94,7 @@ public class ControllerTest {
     @Test
     void signUpSubmit_with_correct_input() throws Exception {
         mockMvc.perform(post("/sign-up")
-                        .param("username", "elephant")
+                        .param("nickname", "elephant")
                         .param("email", "email@email.com")
                         .param("password", "12345678")
                         .with(csrf()))

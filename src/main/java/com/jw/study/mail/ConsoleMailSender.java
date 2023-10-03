@@ -42,7 +42,7 @@ public class ConsoleMailSender implements JavaMailSender {
     }
 
     @Override
-    public void send(MimeMessagePreparator... mimeMessagePreparators) throws MailException {
+    public void send(MimeMessagePreparator... mimeMessagePreparator) throws MailException {
 
     }
 

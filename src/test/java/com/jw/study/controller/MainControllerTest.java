@@ -36,7 +36,7 @@ public class MainControllerTest {
     @BeforeEach
     void beforeEach() {
         SignUpForm signUpForm = new SignUpForm();
-        signUpForm.setUsername("jinu");
+        signUpForm.setNickname("jinu");
         signUpForm.setEmail("email@gmail.com");
         signUpForm.setPassword("12345678");
         accountService.processNewAccount(signUpForm);
@@ -53,7 +53,7 @@ public class MainControllerTest {
     void login_with_email() throws Exception {
 
         mockMvc.perform(post("/login")
-                        .param("username", "email@gmail.com")
+                        .param("nickname", "email@gmail.com")
                         .param("password", "12345678")
                         .with(csrf()))
                         .andExpect(status().is3xxRedirection())
@@ -63,10 +63,10 @@ public class MainControllerTest {
     }
 
     @Test
-    void login_with_username()throws Exception {
+    void login_with_nickname()throws Exception {
 
         mockMvc.perform(post("/login")
-                        .param("username", "jinu")
+                        .param("nickname", "jinu")
                         .param("password", "12345678")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
@@ -80,7 +80,7 @@ public class MainControllerTest {
     void login_fail()throws Exception {
 
         mockMvc.perform(post("/login")
-                        .param("username", "1111")
+                        .param("nickname", "1111")
                         .param("password", "22222")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())

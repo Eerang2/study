@@ -61,7 +61,7 @@ class SettingsControllerTest {
                 .andExpect(redirectedUrl(SettingsController.SETTINGS_PROFILE_URL))
                 .andExpect(flash().attributeExists("message"));
 
-        Account jinu = accountRepository.findByUsername("jinu");
+        Account jinu = accountRepository.findByNickname("jinu");
         assertEquals(bio, jinu.getBio());
     }
 
@@ -79,7 +79,7 @@ class SettingsControllerTest {
                         .andExpect(model().attributeExists("profile"))
                         .andExpect(model().hasErrors());
 
-        Account jinu = accountRepository.findByUsername("jinu");
+        Account jinu = accountRepository.findByNickname("jinu");
         assertNull(jinu.getBio());
     }
 
@@ -106,7 +106,7 @@ class SettingsControllerTest {
                 .andExpect(redirectedUrl(SettingsController.SETTINGS_PASSWORD_URL))
                 .andExpect(flash().attributeExists("message"));
 
-        Account jinu = accountRepository.findByUsername("jinu");
+        Account jinu = accountRepository.findByNickname("jinu");
         assertTrue(passwordEncoder.matches("12345678", jinu.getPassword()));
     }
 
@@ -133,7 +133,7 @@ class SettingsControllerTest {
         mockMvc.perform(get(SettingsController.SETTINGS_ACCOUNT_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("usernameForm"));
+                .andExpect(model().attributeExists("nicknameForm"));
 
     }
 
@@ -141,15 +141,15 @@ class SettingsControllerTest {
     @DisplayName("패스워드 수정하기 - 입력값 정상")
     @Test
     void updateAccount() throws Exception {
-        String newUsername = "gimin";
+        String newNickname = "gimin";
         mockMvc.perform(post(SettingsController.SETTINGS_ACCOUNT_URL)
-                        .param("username", newUsername)
+                        .param("nickname", newNickname)
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(SettingsController.SETTINGS_ACCOUNT_URL))
                 .andExpect(flash().attributeExists("message"));
 
-        assertNotNull(accountRepository.findByUsername("gimin"));
+        assertNotNull(accountRepository.findByNickname("gimin"));
     }
 
     @WithAccount("jinu")
@@ -158,16 +158,16 @@ class SettingsControllerTest {
     void updateAccount_error() throws Exception {
         String newUsername = "|-|=[[^8^//";
         mockMvc.perform(post( SettingsController.SETTINGS_ACCOUNT_URL)
-                        .param("username", newUsername)
+                        .param("nickname", newUsername)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name(SettingsController.SETTINGS_ACCOUNT_VIEW_NAME))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("usernameForm"));
+                .andExpect(model().attributeExists("nicknameForm"));
 
 
-        Account jinu = accountRepository.findByUsername("jinu");
+        Account jinu = accountRepository.findByNickname("jinu");
         assertNull(jinu.getBio());
     }
 
