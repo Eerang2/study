@@ -46,7 +46,6 @@ public class MainControllerTest {
     @AfterEach
     void afterEach() {
         accountRepository.deleteAll();
-
     }
 
     @Test

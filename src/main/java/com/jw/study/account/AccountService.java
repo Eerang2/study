@@ -1,6 +1,7 @@
 package com.jw.study.account;
 
 import com.jw.study.account.domain.Account;
+import com.jw.study.account.domain.Tag;
 import com.jw.study.config.AppProperties;
 import com.jw.study.mail.EmailMessage;
 import com.jw.study.mail.EmailServiceMock;
@@ -23,6 +24,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -89,7 +91,7 @@ public class AccountService implements UserDetailsService {
 
         SecurityContextHolder.getContext().setAuthentication(token);
     }
-    
+
     public void completeSignUp(Account account) {
         account.completeSignUp();
         login(account);
@@ -157,5 +159,10 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException(emailOrNickname);
         }
         return new UserAccount(account);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
     }
 }

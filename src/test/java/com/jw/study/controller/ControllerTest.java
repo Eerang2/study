@@ -3,6 +3,8 @@ package com.jw.study.controller;
 
 import com.jw.study.account.domain.Account;
 import com.jw.study.account.AccountRepository;
+import com.jw.study.mail.EmailMessage;
+import com.jw.study.mail.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class ControllerTest {
     private AccountRepository accountRepository;
 
     @MockBean
-    JavaMailSender javaMailSender;
+    EmailService emailService;
 
 
     @DisplayName("회원가입 테스트")
@@ -99,14 +101,14 @@ public class ControllerTest {
                         .param("password", "12345678")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
-//                .andExpect(unauthenticated().withUsername("elephant"))
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("jinu"));
 
         Account account = accountRepository.findByEmail("email@email.com");
         assertNotNull(account);
         assertNotEquals(account.getPassword(), "12345678");
         assertNotNull(account.getEmailCheckToken());
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
 
     }
 }
